@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GoWarriorCameraClient</string>
+    <string name="download">ManualDownload</string>
+    <string name="resume">Resume</string>
+    <string name="refresh">Refresh</string>
+    <string name="refreshing">Refreshing..</string>
+    <string name="canceled">Canceled</string>
+    <string name="finished">Finished</string>
+    <string name="size">Size</string>
+    <string name="key">Key</string>
+    <string name="nothing_found_to_open_file">
+        There\'s nothing that can open this type of file
+    </string>
+    <string name="files_to_be_uploaded">Files to be uploaded:</string>
+    <string name="transfers">Transfers:</string>
+    <string name="open">Open</string>
+    <string name="snapshot">SnapShot</string>
+    <string name="inputmailhere">Input Your Mail Here</string>
+    <string name="setnotifymail">SetNotifyMail</string>
+    <string name="upload_image">Upload An Image</string>
+    <string name="autoupload">AutoUpload</string>
+    <string name="autodownload">AutoDownload</string>
+    <string name="sendmessage">SendMessage</string>
+    <string name="title_activity_picture_viewer">PictureViewer</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="showpicture">View Downloaded Snapshots</string>
+    <string name="sendalarm">Send Alarm</string>
+    <string name="sendphoto">Take Snapshot</string>
+</resources>
