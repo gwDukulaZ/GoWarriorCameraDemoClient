@@ -36,19 +36,6 @@
 
         <activity android:name=".DownloadActivity" />
 
-
-
-        <!-- Mqtt Service -->
-        <service
-            android:name="com.gowarrior.cloudq.pipe.MqttService"
-            android:enabled="true"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.gowarrior.cloudq.pipe.MqttService" />
-            </intent-filter>
-        </service>
-
-
 </application>
 
 </manifest>

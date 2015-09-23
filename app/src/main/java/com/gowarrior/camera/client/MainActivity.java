@@ -74,9 +74,6 @@ public class MainActivity extends Activity {
 
     String path;
     private boolean allReady = false;
-    private String PIPE_IN = "pipe_in";
-    private String PIPE_OUT = "pipe_out";
-    private String PIPE_ID = "pipe_client";
     private Button showPicsBtn;
     private Button mAlarmButton;
     private Button mSnapshotButton;
@@ -246,12 +243,12 @@ public class MainActivity extends Activity {
         mTimer.schedule(task, 0, REFRESH_DELAY);
 
         //TODO
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                createCWSPipe();
-//            }
-//        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                createCWSPipe();
+            }
+        }).start();
     }
 
 
@@ -266,7 +263,7 @@ public class MainActivity extends Activity {
     private void createCWSPipe() {
         ICWSPipeToken token;
         //TODO
-       // mCWSPipeClient = new CWSPipeClient(this, Constants.PIPE_SERVER, Constants.Prefix+PIPE_ID);
+        mCWSPipeClient = new CWSPipeClient(this);
 
         CWSPipeCallback cb = new CWSPipeCallback() {
 
@@ -320,38 +317,14 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void subPipeTopic(String topic) {
-        CWSPipeActionListener listener = new CWSPipeActionListener() {
-            @Override
-            public void onActionSuccess(ICWSPipeToken icwsPipeToken) {
-                Log.d(TAG, "subscribe onActionSuccess");
-            }
-
-            @Override
-            public void onActionFailure(ICWSPipeToken icwsPipeToken, Throwable throwable) {
-                Log.d(TAG, "subscribe onActionFailure");
-            }
-        };
-
-        mCWSPipeClient.subscribe(topic, 2, this, listener);
+    private void subPipeTopic() {
+        mCWSPipeClient.subscribe();
     }
 
-    private void pubPipeTopic(String topic, String payload) {
+    private void pubPipeTopic(String payload) {
         CWSPipeMessage msg = new CWSPipeMessage(payload.getBytes());
-        CWSPipeActionListener listener = new CWSPipeActionListener() {
-            @Override
-            public void onActionSuccess(ICWSPipeToken icwsPipeToken) {
-                Log.d(TAG, "publish onActionSuccess");
-            }
-
-            @Override
-            public void onActionFailure(ICWSPipeToken icwsPipeToken, Throwable throwable) {
-                Log.d(TAG, "publish onActionFailure");
-            }
-        };
-
         msg.setQos(2);
-        mCWSPipeClient.publish(topic, msg, this, listener);
+        mCWSPipeClient.publish(msg);
     }
 
     private void closePipe() {
@@ -362,12 +335,11 @@ public class MainActivity extends Activity {
     }
 
     private void sendAlarm() {
-        //TODO
-
+        pubPipeTopic("alarm");
     }
 
     private void sendPhoto() {
-       //TODO
+        pubPipeTopic("photo");
     }
 
     /*
@@ -432,7 +404,7 @@ public class MainActivity extends Activity {
             }
             Log.v(TAG, "connect end");
             //TODO
-            //subPipeTopic(Constants.Prefix+PIPE_IN);
+            subPipeTopic();
             Log.v(TAG, "subPipeTopic end");
 
             return 0;
