@@ -4,8 +4,8 @@ import android.net.Uri;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.gowarrior.cloudq.CWSBucketService.ICWSBucketAidlInterface;
-import com.gowarrior.cloudq.CWSBucketService.ICWSBucketCallback;
+import com.gowarrior.cloudq.CWSBucket.ICWSBucketAidlInterface;
+import com.gowarrior.cloudq.CWSBucket.ICWSBucketCallback;
 
 import java.io.File;
 import java.util.List;

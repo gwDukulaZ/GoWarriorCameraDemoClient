@@ -37,11 +37,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.gowarrior.cloudq.CWSBucketService.ICWSBucketAidlInterface;
-import com.gowarrior.cloudq.pipe.CWSPipeActionListener;
-import com.gowarrior.cloudq.pipe.CWSPipeCallback;
-import com.gowarrior.cloudq.pipe.CWSPipeClient;
-import com.gowarrior.cloudq.pipe.CWSPipeMessage;
+import com.gowarrior.cloudq.CWSBucket.ICWSBucketAidlInterface;
+import com.gowarrior.cloudq.CWSPipe.CWSPipeActionListener;
+import com.gowarrior.cloudq.CWSPipe.CWSPipeCallback;
+import com.gowarrior.cloudq.CWSPipe.CWSPipeClient;
+import com.gowarrior.cloudq.CWSPipe.CWSPipeMessage;
 
 import org.eclipse.paho.client.mqttv3.ICWSDeliveryToken;
 import org.eclipse.paho.client.mqttv3.ICWSPipeToken;

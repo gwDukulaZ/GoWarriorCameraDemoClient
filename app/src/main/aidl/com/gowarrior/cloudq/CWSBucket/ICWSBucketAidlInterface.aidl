@@ -1,8 +1,8 @@
 // ICWSBucketAidlInterface.aidl
-package com.gowarrior.cloudq.CWSBucketService;
+package com.gowarrior.cloudq.CWSBucket;
 
 // Declare any non-default types here with import statements
-import com.gowarrior.cloudq.CWSBucketService.ICWSBucketCallback;
+import com.gowarrior.cloudq.CWSBucket.ICWSBucketCallback;
 
 interface ICWSBucketAidlInterface {
     /**
