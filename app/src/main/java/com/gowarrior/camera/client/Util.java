@@ -15,20 +15,14 @@
 
 package com.gowarrior.camera.client;
 
-/*
+/**
  * This class just handles getting the client since we don't need to have more than
  * one per application
  */
 public class Util {
     private static final String TAG = "GoWarriorCameraClient";
 
-
-
     public static String getDownloadPath() {
         return Constants.DOWNLOAD_TO;
     }
-
-
-
-
 }

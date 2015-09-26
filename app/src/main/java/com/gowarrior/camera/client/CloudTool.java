@@ -28,19 +28,16 @@ public class CloudTool extends ICWSBucketCallback.Stub {
             if(0 != bytesTotal) {
                 percent = (int) ((bytesCurrent * 100) / bytesTotal);
             }
-            progressListener.onProgress(object,state,percent);
+            progressListener.onProgress(object, type, state, percent);
         }
     }
 
     public interface CloudToolListener{
-        void onProgress(String filename, String state, int percent);
+        void onProgress(String filename, String type, String state, int percent);
     }
-
-
 
     public void setCloudService(ICWSBucketAidlInterface service) {
         mCloudService = service;
-
     }
 
     public int cloudServiceInit() {
@@ -129,7 +126,6 @@ public class CloudTool extends ICWSBucketCallback.Stub {
         return id;
     }
 
-
     public void deleteFile(String object) {
         try {
             mCloudService.CWSBucketDelete(mHandle, object);
@@ -138,15 +134,7 @@ public class CloudTool extends ICWSBucketCallback.Stub {
         }
     }
 
-
-
-
-
-
-
-
-
-    //-----download file-----
+    /**-----download file-----*/
     public int downloadFile(String path) {
         int downloadsize = 0;
 
@@ -159,7 +147,6 @@ public class CloudTool extends ICWSBucketCallback.Stub {
             mpath = Util.getDownloadPath();
         else
             mpath = path;
-
 
         //file
         List<String> list = getCloudFileList();
@@ -176,16 +163,12 @@ public class CloudTool extends ICWSBucketCallback.Stub {
                         downloadsize++;
                     }
                 }
-
             } else {
                 id = downloadFile(object, mpath);
                 if (id > -1) {
                     downloadsize++;
                 }
-
             }
-
-
         }
 
         return downloadsize;
@@ -206,13 +189,14 @@ public class CloudTool extends ICWSBucketCallback.Stub {
             if (id < 0) {
                 Log.e(TAG, "Download failed !  " + object);
             }
+            progressListener.onProgress(object, "download", "START", 0);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
         return id;
     }
 
-    private long getFileSize(String object) {
+    public long getFileSize(String object) {
         long filesize = 0;
         try {
             filesize = mCloudService.CWSBucketGetFileSize(mHandle, object);
@@ -221,6 +205,4 @@ public class CloudTool extends ICWSBucketCallback.Stub {
         }
         return filesize;
     }
-
-
 }

@@ -49,11 +49,13 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/* 
+/**
  * Activity where the user can see the history of transfers, go to the downloads
  * page, or upload images/videos.
  *
@@ -68,7 +70,7 @@ public class MainActivity extends Activity {
 
     private Timer mTimer;
     private LinearLayout mLayout;
-
+    private Context mContext;
 
     private CWSPipeClient mCWSPipeClient;
 
@@ -83,15 +85,19 @@ public class MainActivity extends Activity {
     Looper looper = Looper.myLooper();
     MyHandler myHandler = new MyHandler(looper);
 
-
     public static CloudTool cloudTool;
     private ICWSBucketAidlInterface myBucket;
+    private HashMap<String, TransferHashItem> mTransferHash;
+    private int mMaxItemShow = 20;
 
     class MyHandler extends Handler {
+
         public MyHandler() {}
+
         public MyHandler(Looper looper) {
             super(looper);
         }
+
         @Override
         public void handleMessage(Message msg) {
             String msgR = (String)msg.obj;
@@ -115,23 +121,14 @@ public class MainActivity extends Activity {
                     mSnapshotButton.setText(msgR);
                 }
             } else if (msgR.equals("connect")) {
-                boolean ignore = false;
                 if (clientconnected) {
                     Date cur = new Date();
                     long connectduration = cur.getTime() - lastConnectTime.getTime();
-                    /*
-                    if (connectduration <= 3000) {
-                        // connect lost within 1s, just ignore it??
-                        Log.v(TAG,"ERROR ------------------ now ignore connect lost within 3s, what will happen?");
-                        ignore = true;
-                    }*/
                     Log.v(TAG,"client mqtt connection lost, duration="+ connectduration);
                 }
-                if (!ignore) {
-                    mAlarmButton.setEnabled(false);
-                    mSnapshotButton.setEnabled(false);
-                    new clientconnect().execute(clientconnected, myHandler);
-                }
+                mAlarmButton.setEnabled(false);
+                mSnapshotButton.setEnabled(false);
+                new clientconnect().execute(clientconnected, myHandler);
             } else if (msgR.equals("connected")) {
                 mAlarmButton.setEnabled(true);
                 mSnapshotButton.setEnabled(true);
@@ -147,11 +144,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-
-
         setContentView(R.layout.activity_main);
 
         mLayout = (LinearLayout) findViewById(R.id.transfers_layout);
+        mContext = this;
 
         cloudServiceBind();
 
@@ -175,7 +171,6 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 startActivity(intent);
-//                startActivityForResult(intent, 1);
             }
         });
 
@@ -213,7 +208,6 @@ public class MainActivity extends Activity {
                 mAlarmButton.setEnabled(false);
                 mAlarmButton.setText("alarm sending cmd ...");
                 sendAlarm();
-                //new testalarm().execute(myHandler);
             }
         });
 
@@ -223,7 +217,6 @@ public class MainActivity extends Activity {
                 mSnapshotButton.setEnabled(false);
                 mSnapshotButton.setText("snapshot sending cmd ...");
                 sendPhoto();
-                //new testsnapshot().execute(myHandler);
             }
         });
 
@@ -234,8 +227,8 @@ public class MainActivity extends Activity {
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //TODO UI refresh
                         syncModels();
-                    //TODO UI refresh
                     }
                 });
             }
@@ -250,7 +243,6 @@ public class MainActivity extends Activity {
             }
         }).start();
     }
-
 
     private void checkDir(String path) {
         File Dir = new File(path);
@@ -297,8 +289,6 @@ public class MainActivity extends Activity {
             public void pipeDeliveryComplete(ICWSDeliveryToken token) {
                 Log.d(TAG, "deliveryComplete, token="+token.toString());
             }
-
-
         };
         mCWSPipeClient.setCallback(cb);
 
@@ -342,7 +332,7 @@ public class MainActivity extends Activity {
         pubPipeTopic("photo");
     }
 
-    /*
+    /**
      * When we get a Uri back from the gallery, upload the associated
      * image/video
      */
@@ -377,13 +367,23 @@ public class MainActivity extends Activity {
         mTimer.purge();
     }
 
-    /* makes sure that we are up to date on the transfers */
+    /** makes sure that we are up to date on the transfers */
     private void syncModels() {
         //TODO
+        TransferHashItem mItem;
+        if(null == mTransferHash)
+            return;
+        Iterator mIterator = mTransferHash.keySet().iterator();
+        if(null != mIterator) {
+            mLayout.removeAllViews();
+            while (mIterator.hasNext()) {
+                mItem = mTransferHash.get(mIterator.next());
+                mItem.mTransferView.setStateAndProgress(mItem.mTransferState, mItem.mTransferPercent);
+                mItem.mTransferView.refresh();
+                mLayout.addView(mItem.mTransferView);
+            }
+        }
     }
-
-
-
 
     private class clientconnect extends AsyncTask<Object, Void, Integer> {
 
@@ -411,44 +411,10 @@ public class MainActivity extends Activity {
         }
     }
 
-    private class testalarm extends AsyncTask<Object, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Object... params) {
-            MyHandler myHandler = (MyHandler)params[0];
-            if (myHandler != null) {
-                Message msg = myHandler.obtainMessage(0, 0, 0, "alarm posted");
-                myHandler.sendMessage(msg);
-                try {
-                    Thread.sleep(2000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                msg = myHandler.obtainMessage(0, 0, 0, "alarm in process");
-                myHandler.sendMessage(msg);
-                try {
-                    Thread.sleep(2000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                msg = myHandler.obtainMessage(0, 0, 0, "alarm done");
-                myHandler.sendMessage(msg);
-            }
-
-
-            return 0;
-        }
-    }
-
-
-
     private class AutoDownload extends AsyncTask<Object, Void, Integer> {
 
         @Override
         protected Integer doInBackground(Object... params) {
-
             return cloudTool.downloadFile(Constants.DOWNLOAD_TO);
         }
 
@@ -467,16 +433,6 @@ public class MainActivity extends Activity {
             findViewById(R.id.autodownload).setEnabled(true);
         }
     }
-
-
-
-
-
-
-
-
-
-
 
     private void fileScan(String file){
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file)));
@@ -518,8 +474,46 @@ public class MainActivity extends Activity {
         return keyHandled;
     }
 
+    public class TransferHashItem {
+        public String mTransferFileName;
+        public String mTransferType;
+        public String mTransferState;
+        public int mTransferPercent;
+        public TransferView mTransferView;
+    }
 
-
+    CloudTool.CloudToolListener mCloudCallback = new CloudTool.CloudToolListener() {
+        @Override
+        public void onProgress(String filename, String type, String state, int percent) {
+            TransferHashItem mHashItem;
+            TransferView mView;
+            int mViewItemNum = 0;
+            Log.i(TAG, "filename:" + filename + ", type:" + type + ", state:" + state + ", percent:" + percent);
+            if(state.equals("START")) {//new transfer
+                if(mTransferHash.containsKey(filename)
+                        && mTransferHash.get(filename).mTransferType.equals(type)) {//has already exist
+                    mHashItem = mTransferHash.get(filename);
+                    mHashItem.mTransferState = "IN_PROGRESS";
+                    mHashItem.mTransferPercent = 0;
+                    mTransferHash.put(filename, mHashItem);
+                } else {//do not have the file or different type, so add new TransferView
+                    mView = new TransferView(mContext, filename, type);
+                    mHashItem = new TransferHashItem();
+                    mHashItem.mTransferFileName = filename;
+                    mHashItem.mTransferType = type;
+                    mHashItem.mTransferState = "IN_PROGRESS";
+                    mHashItem.mTransferPercent = 0;
+                    mHashItem.mTransferView = mView;
+                    mTransferHash.put(filename, mHashItem);
+                }
+            } else {//update TransferView
+                mHashItem = mTransferHash.get(filename);
+                mHashItem.mTransferState= state;
+                mHashItem.mTransferPercent = percent;
+                mTransferHash.put(filename, mHashItem);
+            }
+        }
+    };
 
     private ServiceConnection bucketSC = new ServiceConnection() {
 
@@ -532,10 +526,11 @@ public class MainActivity extends Activity {
             cloudTool.setCloudService(myBucket);
 
             int i =cloudTool.cloudServiceInit();
+            cloudTool.setListener(mCloudCallback);
+            mTransferHash = new HashMap<String, TransferHashItem>();
             if (i > 0){
                 allReady = true;
             }
-
         }
 
         @Override

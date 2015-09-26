@@ -19,7 +19,6 @@ import android.os.Environment;
 
 public class Constants {
 
-
     public static final String DOWNLOAD_TO = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/snapshot";
 
 }
