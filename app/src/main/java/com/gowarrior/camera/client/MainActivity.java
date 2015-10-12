@@ -116,6 +116,7 @@ public class MainActivity extends Activity {
                     String[] keys = new String[1];
                     keys[0] = msgR.substring(msgR.indexOf('-')+1);
 
+                    cloudTool.syncWithCloud();
                     cloudTool.downloadFile(keys[0],Constants.DOWNLOAD_TO);
                 } else {
                     mSnapshotButton.setText(msgR);
@@ -412,6 +413,11 @@ public class MainActivity extends Activity {
     }
 
     private class AutoDownload extends AsyncTask<Object, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            cloudTool.syncWithCloud();
+        }
 
         @Override
         protected Integer doInBackground(Object... params) {

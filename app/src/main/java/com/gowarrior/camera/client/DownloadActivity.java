@@ -91,6 +91,7 @@ public class DownloadActivity extends Activity {
         protected void onPreExecute() {
             mRefreshButton.setEnabled(false);
             mRefreshButton.setText(com.gowarrior.camera.client.R.string.refreshing);
+            MainActivity.cloudTool.syncWithCloud();
         }
 
         @Override
