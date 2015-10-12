@@ -153,6 +153,7 @@ public class CloudTool extends ICWSBucketCallback.Stub {
 
         for (int i = 0; i < list.size(); i++) {
             object = list.get(i);
+            if (object.toLowerCase().endsWith("jpg")) {
             File tmpfile = new File(mpath, object);
             if (tmpfile.exists()) {
                 if (tmpfile.length() == getFileSize(object)) {
@@ -170,6 +171,7 @@ public class CloudTool extends ICWSBucketCallback.Stub {
                 }
             }
         }
+        }
 
         return downloadsize;
     }
@@ -185,11 +187,13 @@ public class CloudTool extends ICWSBucketCallback.Stub {
             long size = mCloudService.CWSBucketGetFileSize(mHandle, object);
             Log.d(TAG, "++call CWSBucketDownload++ object=" + object + " size=" + size);
             Uri uri = Uri.fromFile(new File(localDir, object));
+            if (object.toLowerCase().endsWith("jpg")) {
             id = mCloudService.CWSBucketDownload(mHandle, object, uri);
             if (id < 0) {
                 Log.e(TAG, "Download failed !  " + object);
             }
             progressListener.onProgress(object, "download", "START", 0);
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
