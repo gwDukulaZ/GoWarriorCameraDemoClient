@@ -18,7 +18,12 @@ package com.gowarrior.camera.client;
 import android.os.Environment;
 
 public class Constants {
-
+    public static final String WAITUPLOAD = "upload";
+    public static final String WAITDOWNLOAD = "download";
+    public static final String UPLOADING = "uploading";
+    public static final String DOWNLOADING = "downloading";
+    public static final String WAITDELETE = "delete";
+    public static final String COMPLETE = "COMPLETE";
     public static final String DOWNLOAD_TO = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/snapshot";
 
 }

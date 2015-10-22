@@ -76,6 +76,18 @@ public class DownloadActivity extends Activity {
             }
         });
 
+        findViewById(R.id.delete).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // download all the objects that were selected
+                for (String obj : mSelectedObjects) {
+                    Log.d(TAG, "the need delete file [" + obj + "] size is " + MainActivity.cloudTool.getFileSize(obj));
+                    MainActivity.cloudTool.deleteFile(obj);
+                }
+                finish();
+            }
+        });
+
         findViewById(com.gowarrior.camera.client.R.id.refresh).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

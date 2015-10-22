@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GoWarriorCameraClient</string>
-    <string name="download">ManualDownload</string>
+    <string name="management">SnapshotManagement</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
     <string name="resume">Resume</string>
     <string name="refresh">Refresh</string>
     <string name="refreshing">Refreshing..</string>

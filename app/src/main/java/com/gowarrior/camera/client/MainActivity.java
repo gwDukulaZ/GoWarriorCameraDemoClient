@@ -76,9 +76,11 @@ public class MainActivity extends Activity {
 
     String path;
     private boolean allReady = false;
-    private Button showPicsBtn;
-    private Button mAlarmButton;
+    private Button mAutoDownload;
+    private Button mSnapshotManagement;
     private Button mSnapshotButton;
+    private Button mAlarmButton;
+    private Button showPicsBtn;
     private boolean clientconnected = false;
     private Date lastConnectTime;
 
@@ -155,9 +157,13 @@ public class MainActivity extends Activity {
         path = Constants.DOWNLOAD_TO;
         checkDir(path);
 
+        mAutoDownload = (Button) findViewById(R.id.autodownload);
+        mSnapshotManagement = (Button) findViewById(R.id.management);
         showPicsBtn = (Button) findViewById(R.id.showpicture);
         mAlarmButton = (Button) findViewById(R.id.sendalarm);
         mSnapshotButton = (Button) findViewById(R.id.sendphoto);
+        mAutoDownload.setEnabled(false);
+        mSnapshotManagement.setEnabled(false);
         mAlarmButton.setEnabled(false);
         mSnapshotButton.setEnabled(false);
 
@@ -175,7 +181,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        findViewById(R.id.autodownload).setOnClickListener(new OnClickListener() {
+        mAutoDownload.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 if (!allReady) {
@@ -189,7 +195,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        findViewById(R.id.download).setOnClickListener(new OnClickListener() {
+        mSnapshotManagement.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!allReady) {
@@ -536,12 +542,17 @@ public class MainActivity extends Activity {
             mTransferHash = new HashMap<String, TransferHashItem>();
             if (i > 0){
                 allReady = true;
+                mAutoDownload.setEnabled(true);
+                mSnapshotManagement.setEnabled(true);
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(TAG, "onServiceDisconnected");
+            mAutoDownload.setEnabled(false);
+            mSnapshotManagement.setEnabled(false);
+            allReady = false;
         }
     };
 

@@ -35,11 +35,11 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/autodownload" />
-            <Button android:id="@+id/download"
+            <Button android:id="@+id/management"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/download" />
+                android:text="@string/management" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

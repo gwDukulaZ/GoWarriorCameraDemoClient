@@ -8,6 +8,7 @@ import com.gowarrior.cloudq.CWSBucket.ICWSBucketAidlInterface;
 import com.gowarrior.cloudq.CWSBucket.ICWSBucketCallback;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -74,6 +75,14 @@ public class CloudTool extends ICWSBucketCallback.Stub {
             }
         } else {
             Log.w(TAG, "cloudService not ready");
+        }
+
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            String value = it.next();
+            if (!value.endsWith("-snap.jpg")) {
+                 it.remove();
+            }
         }
         return list;
     }
@@ -153,7 +162,7 @@ public class CloudTool extends ICWSBucketCallback.Stub {
 
         for (int i = 0; i < list.size(); i++) {
             object = list.get(i);
-            if (object.toLowerCase().endsWith("jpg")) {
+            Log.v(TAG,"download file check: "+object);
             File tmpfile = new File(mpath, object);
             if (tmpfile.exists()) {
                 if (tmpfile.length() == getFileSize(object)) {
@@ -170,7 +179,6 @@ public class CloudTool extends ICWSBucketCallback.Stub {
                     downloadsize++;
                 }
             }
-        }
         }
 
         return downloadsize;

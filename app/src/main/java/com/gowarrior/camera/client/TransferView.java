@@ -45,7 +45,9 @@ public class TransferView extends LinearLayout {
         mFileName = mTextValue;
 
         mText = ((TextView) findViewById(R.id.text));
-        mText.setText(mTextValue);
+        mText.setText((mTransferType.equals(Constants.WAITUPLOAD))?("↑"+mTextValue):
+                ((mTransferType.equals(Constants.WAITDOWNLOAD))?("↓"+mTextValue):
+                 ((mTransferType.equals(Constants.WAITDELETE))?("×"+mTextValue):("?"))));
         mPause = (ImageButton) findViewById(R.id.left_button);
         mPause.setImageResource(R.drawable.pause);
         mAbort = (ImageButton) findViewById(R.id.right_button);
