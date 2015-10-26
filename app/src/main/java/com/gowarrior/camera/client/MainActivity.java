@@ -350,6 +350,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         Log.d(TAG,"onDestory");
+        cloudTool.cloudServiceFinish();
         cloudServiceUnbind();
         closePipe();
         mLayout.removeAllViews();
@@ -552,6 +553,7 @@ public class MainActivity extends Activity {
             Log.d(TAG, "onServiceDisconnected");
             mAutoDownload.setEnabled(false);
             mSnapshotManagement.setEnabled(false);
+            cloudTool.cloudServiceFinish();
             allReady = false;
         }
     };

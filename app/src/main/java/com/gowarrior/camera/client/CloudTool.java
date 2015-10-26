@@ -57,6 +57,17 @@ public class CloudTool extends ICWSBucketCallback.Stub {
         return mHandle;
     }
 
+    public int cloudServiceFinish() {
+        int ret = 0;
+        try {
+            ret = mCloudService.CWSBucketFinish(mHandle);
+        }catch (RemoteException e){
+            e.printStackTrace();
+        }
+
+        return  ret;
+    }
+
     int getHandle() {
         return mHandle;
     }
