@@ -4,7 +4,7 @@ android {
     buildToolsVersion "19.1.0"
 
     defaultConfig {
-        applicationId "com.gowarrior.camera.client2"
+        applicationId "com.gowarrior.camera.client"
         minSdkVersion 10
         targetSdkVersion 19
     }
